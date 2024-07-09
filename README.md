@@ -10,4 +10,5 @@ Also, it would be nice to rewrite Prototype-style functions in EcmaScript 6+.
 ### Features to add:
 - [ ] Set the mines number
 - [ ] Set the board size
-- [ ] Set flags
+- [ ] Add logic when all cells are revealed and all flags are set up
+- [x] Set flags

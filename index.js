@@ -1,11 +1,12 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const w = 100;
+const totalBees = 10;
 
 let grid;
 let cols;
 let rows;
-let w = 100;
-let totalBees = 10;
+let currentFlags = 0;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -18,6 +19,7 @@ function make2DArray(cols, rows) {
 
 function Cell(i, j, w) {
   this.i = i;
+  ``;
   this.j = j;
   this.x = i * w;
   this.y = j * w;
@@ -26,6 +28,7 @@ function Cell(i, j, w) {
 
   this.bee = false;
   this.revealed = false;
+  this.flagged = false;
   // this.show();
 }
 
@@ -64,12 +67,16 @@ Cell.prototype.contains = function (x, y) {
 };
 
 Cell.prototype.reveal = function () {
-  this.revealed = true;
-  this.show();
+  if (!this.flagged) {
+    this.revealed = true;
+    this.show();
 
-  if (this.neighborCount === 0) {
-    // flood fill
-    this.floodFill();
+    if (this.neighborCount === 0) {
+      // flood fill
+      this.floodFill();
+    }
+  } else {
+    console.log("cant reveal, cell is flagged");
   }
 };
 
@@ -118,6 +125,40 @@ Cell.prototype.countBees = function () {
   this.neighborCount = total;
 };
 
+Cell.prototype.toggleFlag = function () {
+  if (!this.flagged) {
+    if (currentFlags >= totalBees || this.revealed) {
+      console.log(
+        "Maximum number of flags reached or this cell is already revealed"
+      );
+      return;
+    }
+    // Draw the flag
+    ctx.beginPath();
+    ctx.moveTo(this.x + 40, this.y + 20);
+    ctx.lineTo(this.x + 40, this.y + 80);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(this.x + 40, this.y + 20);
+    ctx.lineTo(this.x + 70, this.y + 35);
+    ctx.lineTo(this.x + 40, this.y + 50);
+    ctx.closePath();
+    ctx.fillStyle = "red";
+    ctx.fill();
+
+    currentFlags++;
+    this.flagged = true;
+  } else {
+    // Remove the flag
+    ctx.clearRect(this.x + 38, this.y + 18, 34, 64);
+    currentFlags--;
+    this.flagged = false;
+  }
+};
+
 function setup() {
   // createCanvas(200, 200);
   const width = 1000;
@@ -154,14 +195,28 @@ function setup() {
 }
 
 function mousePressed(event) {
-  console.log(event.offsetX, event.offsetY);
+  // console.log(event.offsetX, event.offsetY);
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       if (grid[i][j].contains(event.offsetX, event.offsetY)) {
-        grid[i][j].reveal();
-        if (grid[i][j].bee) {
-          gameOver();
+        if (!grid[i][j].flagged) {
+          grid[i][j].reveal();
+          if (grid[i][j].bee) {
+            gameOver();
+          }
         }
+      }
+    }
+  }
+}
+
+function rightMouseButtonPressed(event) {
+  event.preventDefault();
+  // console.log(event.offsetX, event.offsetY);
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      if (grid[i][j].contains(event.offsetX, event.offsetY)) {
+        grid[i][j].toggleFlag();
       }
     }
   }
@@ -181,6 +236,7 @@ function gameOver() {
 }
 
 canvas.addEventListener("click", mousePressed);
+canvas.addEventListener("contextmenu", rightMouseButtonPressed);
 
 setup();
 // draw();
