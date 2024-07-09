@@ -1,5 +1,5 @@
 # Minesweeper.js
-A simple Minesweeper game built using vanilla JavaScript
+A simple [Minesweeper](https://en.wikipedia.org/wiki/Minesweeper_(video_game)) game built using vanilla JavaScript
 
 Current board size is 10x10 but it will parametrized in the future (probably). The amount of mines by default is equal to 10. 
 
