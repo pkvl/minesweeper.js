@@ -11,4 +11,5 @@ Also, it would be nice to rewrite Prototype-style functions in EcmaScript 6+.
 - [ ] Set the mines number
 - [ ] Set the board size
 - [ ] Add logic when all cells are revealed and all flags are set up
+- [ ] Refactor: separate drawing logic
 - [x] Set flags
