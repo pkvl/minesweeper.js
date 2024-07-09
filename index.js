@@ -1,10 +1,11 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-var grid;
-var cols;
-var rows;
-var w = 100;
-var totalBees = 10;
+
+let grid;
+let cols;
+let rows;
+let w = 100;
+let totalBees = 10;
 
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
@@ -106,7 +107,7 @@ Cell.prototype.countBees = function () {
         this.j + j >= 0 &&
         this.j + j < rows
       ) {
-        var neighbor = grid[this.i + i][this.j + j];
+        let neighbor = grid[this.i + i][this.j + j];
         if (neighbor.bee) {
           total++;
         }
@@ -126,7 +127,7 @@ function setup() {
   grid = make2DArray(10, 10);
 
   if (canvas.getContext) {
-    var options = [];
+    let options = [];
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         grid[i][j] = new Cell(i, j, w);
